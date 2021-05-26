@@ -1,4 +1,4 @@
-package io.oferto.application.service;
+package io.oferto.application.backend.service;
 
 import java.util.List;
 import java.util.logging.Level;

@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import io.oferto.application.backend.model.Product;
-import io.oferto.application.service.ProductService;
+import io.oferto.application.backend.service.ProductService;
 
 @RestController
 @RequestMapping("/api")
