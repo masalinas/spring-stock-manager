@@ -31,7 +31,7 @@ import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 
 @Configuration
-public class SwaggerConfig {
+public class SwaggerConfiguration {
 	@Bean
 	public Docket postsApi() {		
 		return new Docket(DocumentationType.SWAGGER_2)				
