@@ -23,98 +23,98 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import io.oferto.application.backend.model.Product;
-import io.oferto.application.backend.model.Warehouse;
+import io.oferto.application.backend.model.Stock;
 import io.oferto.application.backend.service.ProductService;
-import io.oferto.application.backend.service.WarehouseService;
+import io.oferto.application.backend.service.StockService;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
-@Api(value = "Set of endpoints for CRUD Product operations")
-public class ProductController {
-	@Autowired
-	WarehouseService warehouseService;
-	
+@Api(value = "Set of endpoints for CRUD Stock operations")
+public class StockController {	
 	@Autowired
 	ProductService productService;
 	
-	@GetMapping("products")
-	@ApiOperation(value = "Get all products", nickname = "findAll")
+	@Autowired
+	StockService stockService;
+		
+	@GetMapping("stocks")
+	@ApiOperation(value = "Get all stocks", nickname = "findAll")
 	@RolesAllowed({"user", "admin"})
-	public ResponseEntity<List<Product>> findAll() {
+	public ResponseEntity<List<Stock>> findAll() {
 		try {
-		   List<Product> products = productService.findAll();
+		   List<Stock> stocks = stockService.findAll();
 					
-		    return new ResponseEntity<>(products, HttpStatus.OK);
+		    return new ResponseEntity<>(stocks, HttpStatus.OK);
 		  } catch (Exception e) {
 		    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		  }
 	}
 	
-	@GetMapping("products/warehouses/{warehouseId}")
-	@ApiOperation(value = "Get all products by Warehouse Id", nickname = "findAllByWarehouseId")
+	@GetMapping("stocks/warehouses/{warehouseId}")
+	@ApiOperation(value = "Get all stocks by Warehouse Id", nickname = "findByWarehouseId")
 	@RolesAllowed({"user", "admin"})
-	public ResponseEntity<List<Product>> findAllByWarehouseId(@ApiParam(value = "The warehouse id", required = true) @PathVariable Long warehouseId) {
+	public ResponseEntity<List<Stock>> findAllByWarehouseId(@ApiParam(value = "The warehouse id", required = true) @PathVariable Long warehouseId) {
 		try {
-		   Optional<List<Product>> products = productService.findAllByWarehouseId(warehouseId);
+		   Optional<List<Stock>> stocks = stockService.findAllByWarehouseId(warehouseId);
 					
-		    return new ResponseEntity<>(products.get(), HttpStatus.OK);
+		    return new ResponseEntity<>(stocks.get(), HttpStatus.OK);
 		  } catch (Exception e) {
 		    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		  }
 	}
 	
-	@GetMapping("products/{id}")
-	@ApiOperation(value = "Get product by Id", nickname = "findById")
+	@GetMapping("stocks/{id}")
+	@ApiOperation(value = "Get stock by Id", nickname = "findById")
 	@RolesAllowed({"user", "admin"})
-	public ResponseEntity<Product> findById(@ApiParam(value = "The products id", required = true)  @PathVariable Long id) {
+	public ResponseEntity<Stock> findById(@ApiParam(value = "The stock id", required = true)  @PathVariable Long id) {
 		try {
-		    Optional<Product> product = productService.findById(id);
+		    Optional<Stock> stock = stockService.findById(id);
 					
-		    return new ResponseEntity<>(product.get(), HttpStatus.OK);
+		    return new ResponseEntity<>(stock.get(), HttpStatus.OK);
 		  } catch (Exception e) {
 		    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		  }
 	}
 	
-	@PostMapping("products")
-	@ApiOperation(value = "Create a product", nickname = "save")
+	@PostMapping("stocks")
+	@ApiOperation(value = "Create a stock", nickname = "save")
 	@ResponseStatus(HttpStatus.CREATED)
 	@RolesAllowed({"admin"})
-	public ResponseEntity<Product> save(@ApiParam(value="Product entity") @RequestBody final Product product) {
+	public ResponseEntity<Stock> save(@ApiParam(value="Stock entity") @RequestBody final Stock stock) {
 		try {
-		    Product _product = productService.save(product);
-		    return new ResponseEntity<>(_product, HttpStatus.CREATED);
+		    Stock _stock = stockService.save(stock);
+		    return new ResponseEntity<>(_stock, HttpStatus.CREATED);
 		} catch (Exception e) {
 		    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
 	}
 
-    @PostMapping("/products/warehouses/{warehouseId}")
-    @ApiOperation(value = "Create a product", nickname = "create")
+	@PostMapping("/stocks/products/{productId}")
+    @ApiOperation(value = "Create a stock", nickname = "create")
 	@ResponseStatus(HttpStatus.CREATED)
 	@RolesAllowed({"admin"})
-    public ResponseEntity<Product> create(@PathVariable (value = "warehouseId") Long warehouseId, @RequestBody Product product) {
+    public ResponseEntity<Stock> create(@PathVariable (value = "productId") Long productId, @RequestBody Stock stock) {
     	try {
-    		Optional<Warehouse> warehouse = warehouseService.findById(warehouseId);
+    		Optional<Product> product = productService.findById(productId);
     		
-    		if (!warehouse.isPresent())
+    		if (!product.isPresent())
     			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     		
-			product.setWarehouse(warehouse.get());
+			stock.setProduct(product.get());
 			
-			return save(product);            
+			return save(stock);            
 		} catch (Exception e) {
 		    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}    
     }
-    
-	@DeleteMapping("products/{id}")
-	@ApiOperation(value = "Delete a product", nickname = "delete")
+	
+	@DeleteMapping("stocks/{id}")
+	@ApiOperation(value = "Delete a stock", nickname = "delete")
 	@RolesAllowed({"admin"})
-	public ResponseEntity<HttpStatus> delete(@ApiParam(value = "The product id", required = true) @PathVariable Long id) {		
+	public ResponseEntity<HttpStatus> delete(@ApiParam(value = "The stock id", required = true) @PathVariable Long id) {		
 		try {
-			productService.deleteById(id);
+			stockService.deleteById(id);
 			
 		    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
@@ -122,12 +122,12 @@ public class ProductController {
 		}
 	}
 	
-	@ApiOperation(value = "Count number product", nickname = "count")
-	@GetMapping("products/count")
+	@ApiOperation(value = "Count number stocks", nickname = "count")
+	@GetMapping("stocks/count")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<Long> count() {
 		try {
-			long result = productService.count();
+			long result = stockService.count();
 			
 		    return new ResponseEntity<Long>(result, HttpStatus.OK);
 		} catch (Exception e) {

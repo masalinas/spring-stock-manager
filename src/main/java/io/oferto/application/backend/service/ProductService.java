@@ -27,6 +27,10 @@ public class ProductService {
         return productRepository.findById(id);
     }
 	
+	public Optional<List<Product>> findAllByWarehouseId(Long warehouseId) {
+        return productRepository.findAllByWarehouseId(warehouseId);
+    }
+	
     public long count() {
         return productRepository.count();
     }

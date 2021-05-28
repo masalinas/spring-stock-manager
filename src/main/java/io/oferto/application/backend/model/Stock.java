@@ -7,10 +7,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModel;
+
 @Entity
+@Table(name = "stock")
+@ApiModel(description = "Class representing a stock tracked by the application.")
 public class Stock extends AbstractEntity {
 	public enum Status {
 		STORED("Stored"),
@@ -27,10 +31,6 @@ public class Stock extends AbstractEntity {
 	    	return label;
 	    }
 	}
-	
-	@ManyToOne
-	@JoinColumn(name = "warehouse_id")	
-	private Warehouse warehouse;
 	
 	@ManyToOne
 	@JoinColumn(name = "product_id")	
@@ -50,14 +50,6 @@ public class Stock extends AbstractEntity {
 	@Enumerated(EnumType.STRING)
 	@NotNull(message = "Status is required")
 	private Status status;	
-	
-	public Warehouse getWarehouse() {
-		return warehouse;
-	}
-
-	public void setWarehouse(Warehouse warehouse) {
-		this.warehouse = warehouse;
-	}
 	
 	public Product getProduct() {
 		return product;

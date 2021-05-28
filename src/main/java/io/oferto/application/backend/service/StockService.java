@@ -1,6 +1,7 @@
 package io.oferto.application.backend.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +23,14 @@ public class StockService {
         return stockRepository.findAll();
     }
 
+	public Optional<List<Stock>> findAllByWarehouseId(Long warehouseId) {
+        return stockRepository.findAllByWarehouseId(warehouseId);
+    }
+	
+	public Optional<Stock> findById(long id) {
+        return stockRepository.findById(id);
+    }
+	
     public long count() {
         return stockRepository.count();
     }
@@ -30,12 +39,17 @@ public class StockService {
     	stockRepository.delete(stock);
     }
     
-    public void save(Stock stock) {
+    public void deleteById(Long id) {
+    	stockRepository.deleteById(id);
+    }
+    
+    public Stock save(Stock stock) {
         if (stock == null) {
             LOGGER.log(Level.SEVERE,
                 "Stock is null. Are you sure you have connected your form to the application?");
-            return;
+            return null;
         }
-        stockRepository.save(stock);
-    }   
+        
+        return stockRepository.save(stock);
+    } 
 }

@@ -5,10 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.Lists;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.AuthorizationScopeBuilder;
@@ -26,6 +30,7 @@ import springfox.documentation.service.SecurityReference;
 import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
+import springfox.documentation.spi.service.contexts.SecurityContextBuilder;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
@@ -35,72 +40,66 @@ public class SwaggerConfiguration {
 	@Bean
 	public Docket postsApi() {		
 		return new Docket(DocumentationType.SWAGGER_2)				
-				.apiInfo(apiInfo())
-				.select().apis(RequestHandlerSelectors.basePackage("io.oferto.application.backend.controller")).paths(PathSelectors.any())                          
-		        .build()
-		        .securitySchemes(buildSecurityScheme())
-		        .securityContexts(buildSecurityContext());
+			.apiInfo(apiInfo())
+			.select().apis(RequestHandlerSelectors.basePackage("io.oferto.application.backend.controller")).paths(PathSelectors.any())                          
+	        .build()
+	        .securitySchemes(buildSecurityScheme())
+	        .securityContexts(buildSecurityContext());
 	}
 	
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
-				.title("Stock Manager API")
-				.description("Stock Manager API reference for developers")
-				.termsOfServiceUrl("http://oferto.io/terms")
-				.contact(new Contact("Oferto", "http://oferto.io", "info@oferto.io"))
-				.build();
+			.title("Stock Manager API")
+			.description("Stock Manager API reference for developers")
+			.termsOfServiceUrl("http://oferto.io/terms")
+			.contact(new Contact("Oferto", "http://oferto.io", "info@oferto.io"))
+			.build();
 	}
 	
 	@Bean
     public SecurityConfiguration securityConfiguration() {
-        Map<String, Object> additionalQueryStringParams=new HashMap<>();
+        Map<String, Object> additionalQueryStringParams = new HashMap<>();
         additionalQueryStringParams.put("nonce", "123456");
 
         return SecurityConfigurationBuilder.builder()
-            .clientId("stock-manager")
             .realm("stock-manager")
-            .appName("swagger-ui")
+            .clientId("stock-manager")
+            .appName("Stock Manager")
             .additionalQueryStringParams(additionalQueryStringParams)
             .build();
     }
 	
     private List<SecurityContext> buildSecurityContext() {
         List<SecurityReference> securityReferences = new ArrayList<>();
-
+        
         securityReferences.add(SecurityReference.builder().reference("oauth2").scopes(scopes().toArray(new AuthorizationScope[]{})).build());
 
-        SecurityContext context = SecurityContext.builder().forPaths(Predicates.alwaysTrue()).securityReferences(securityReferences).build();
+        List<SecurityContext> securityContexts = new ArrayList<>();
 
-        List<SecurityContext> ret = new ArrayList<>();
-        ret.add(context);
+        SecurityContext context = new SecurityContextBuilder().operationSelector(Predicates.alwaysTrue()).securityReferences(securityReferences).build();       
+        securityContexts.add(context);
         
-        return ret;
+        return securityContexts;
     }
 	
     private List<SecurityScheme> buildSecurityScheme() {
-        List<SecurityScheme> lst = new ArrayList<>();
-        // lst.add(new ApiKey("api_key", "X-API-KEY", "header"));
+        List<SecurityScheme> securitySchemes = new ArrayList<>();
 
         LoginEndpoint login = new LoginEndpointBuilder().url("http://localhost:8081/auth/realms/stock-manager/protocol/openid-connect/auth").build();
-
+        
         List<GrantType> gTypes = new ArrayList<>();
         gTypes.add(new ImplicitGrant(login, "acces_token"));
 
-        lst.add(new OAuth("oauth2", scopes(), gTypes));
-        return lst;
+        securitySchemes.add(new OAuth("oauth2", scopes(), gTypes));
+        
+        return securitySchemes;
     }
     
     private List<AuthorizationScope> scopes() {
         List<AuthorizationScope> scopes = new ArrayList<>();
         
-        for (String scopeItem : new String[]{"openid=openid", "profile=profile"}) {
-            String scope[] = scopeItem.split("=");
-            if (scope.length == 2) {
-                scopes.add(new AuthorizationScopeBuilder().scope(scope[0]).description(scope[1]).build());
-            } else {
-                //log.warn("Scope '{}' is not valid (format is scope=description)", scopeItem);
-            }
-        }
+        scopes.add(new AuthorizationScope("profile", "Profile user")); 
+        scopes.add(new AuthorizationScope("email", "User email"));
 
         return scopes;
     }  

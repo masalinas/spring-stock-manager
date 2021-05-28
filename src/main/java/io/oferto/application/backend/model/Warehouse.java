@@ -1,19 +1,24 @@
 package io.oferto.application.backend.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
+@Table(name = "warehouse")
 @ApiModel(description = "Class representing a warehouse tracked by the application.")
 public class Warehouse extends AbstractEntity {
 	@NotNull(message = "Warehouse name cannot be null")
+	@Size(max = 45)
     @ApiModelProperty(notes = "Name of the warehouse.", example = "Accme", required = true, position = 2)
 	private String name;
 	
 	@ApiModelProperty(notes = "Address of the warehouse.", example = "C/ Profesor Potter", required = false, position = 3)
+	@Size(max = 255)
 	private String address;
 	
 	@NotNull(message = "Longitude is required")

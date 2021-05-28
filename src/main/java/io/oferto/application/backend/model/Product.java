@@ -1,21 +1,20 @@
 package io.oferto.application.backend.model;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
+@Table(name = "product")
+@ApiModel(description = "Class representing a product tracked by the application.")
 public class Product extends AbstractEntity {
 	public enum Family {
 		PERISHABLE("Perishable"),
@@ -41,9 +40,11 @@ public class Product extends AbstractEntity {
 	private Warehouse warehouse;
 	
 	@ApiModelProperty(notes = "Product name.", example = "Accme", required = true, position = 3)
+	@Size(max = 45)
 	private String name;
     
 	@ApiModelProperty(notes = "Product description.", example = "Accme", required = false, position = 4)
+	@Size(max = 255)
 	private String description;
 
 	@Enumerated(EnumType.STRING)
@@ -58,9 +59,6 @@ public class Product extends AbstractEntity {
 	@NotNull(message = "Active is required")
 	@ApiModelProperty(notes = "Product status.", example = "true", required = true, position = 7)
 	private boolean active = true;
-	
-	@OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-	private List<Stock> stocks = new LinkedList<>();
 	  
 	public Product() {
 	}
@@ -106,9 +104,5 @@ public class Product extends AbstractEntity {
 	}
 	public void setActive(boolean active) {
 		this.active = active;
-	}
-	
-	public List<Stock> getStocks() {
-		return stocks;
 	}
 }

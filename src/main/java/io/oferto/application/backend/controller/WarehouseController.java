@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +32,12 @@ import io.oferto.application.backend.service.WarehouseService;
 public class WarehouseController {
 	@Autowired
 	WarehouseService warehouseService;
+	
+	@RequestMapping(value = "/anonymous", method = RequestMethod.GET)
+	@ApiOperation(value = "Anonymous endpoin", nickname = "anonymous")
+    public ResponseEntity<String> getAnonymous() {
+        return ResponseEntity.ok("Hello Anonymous");
+    }
 	
 	@GetMapping("warehouses")
 	@ApiOperation(value = "Get all warehouses", nickname = "findAll")
