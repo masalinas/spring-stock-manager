@@ -1,5 +1,5 @@
 # description
-Poc Spring Stock Manager
+Poc Spring Stock Manager integrated with KeyCloak IAM service and Swagger 3.0 API documented
 
 # depedencies
 
