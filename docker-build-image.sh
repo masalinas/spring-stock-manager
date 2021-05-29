@@ -1,0 +1,1 @@
+docker build -t spring-stock-manager:latest .

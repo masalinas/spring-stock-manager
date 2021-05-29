@@ -5,17 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import com.google.common.base.Predicates;
-import com.google.common.collect.Lists;
 
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.AuthorizationScopeBuilder;
 import springfox.documentation.builders.LoginEndpointBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -83,9 +78,16 @@ public class SwaggerConfiguration {
     }
 	
     private List<SecurityScheme> buildSecurityScheme() {
+    	String swaggerHost = "localhost";
+    	
+    	System.out.println("HOST_SWAGGER: " + System.getenv("HOST_SWAGGER"));
+    	
+        if (System.getenv("HOST_SWAGGER") != null)
+        	swaggerHost = System.getenv("HOST_SWAGGER");        	       
+        
         List<SecurityScheme> securitySchemes = new ArrayList<>();
-
-        LoginEndpoint login = new LoginEndpointBuilder().url("http://localhost:8081/auth/realms/stock-manager/protocol/openid-connect/auth").build();
+                
+        LoginEndpoint login = new LoginEndpointBuilder().url("http://" + swaggerHost + ":8080/auth/realms/stock-manager/protocol/openid-connect/auth").build();
         
         List<GrantType> gTypes = new ArrayList<>();
         gTypes.add(new ImplicitGrant(login, "acces_token"));
