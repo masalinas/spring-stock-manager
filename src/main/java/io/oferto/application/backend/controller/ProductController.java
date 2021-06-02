@@ -39,7 +39,7 @@ public class ProductController {
 	ProductService productService;
 	
 	@GetMapping("products")
-	@ApiOperation(value = "Get all products", nickname = "findAll")
+	@ApiOperation(value = "Get all products", nickname = "findAllProduct")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<List<Product>> findAll() {
 		try {
@@ -52,7 +52,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("products/warehouses/{warehouseId}")
-	@ApiOperation(value = "Get all products by Warehouse Id", nickname = "findAllByWarehouseId")
+	@ApiOperation(value = "Get all products by Warehouse Id", nickname = "findAllByWarehouseIdProduct")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<List<Product>> findAllByWarehouseId(@ApiParam(value = "The warehouse id", required = true) @PathVariable Long warehouseId) {
 		try {
@@ -65,7 +65,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("products/{id}")
-	@ApiOperation(value = "Get product by Id", nickname = "findById")
+	@ApiOperation(value = "Get product by Id", nickname = "findByIdProduct")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<Product> findById(@ApiParam(value = "The products id", required = true)  @PathVariable Long id) {
 		try {
@@ -78,7 +78,7 @@ public class ProductController {
 	}
 	
 	@PostMapping("products")
-	@ApiOperation(value = "Create a product", nickname = "save")
+	@ApiOperation(value = "Create a product", nickname = "saveProduct")
 	@ResponseStatus(HttpStatus.CREATED)
 	@RolesAllowed({"admin"})
 	public ResponseEntity<Product> save(@ApiParam(value="Product entity") @RequestBody final Product product) {
@@ -91,7 +91,7 @@ public class ProductController {
 	}
 
     @PostMapping("/products/warehouses/{warehouseId}")
-    @ApiOperation(value = "Create a product", nickname = "create")
+    @ApiOperation(value = "Create a product", nickname = "createProduct")
 	@ResponseStatus(HttpStatus.CREATED)
 	@RolesAllowed({"admin"})
     public ResponseEntity<Product> create(@PathVariable (value = "warehouseId") Long warehouseId, @RequestBody Product product) {
@@ -110,7 +110,7 @@ public class ProductController {
     }
     
 	@DeleteMapping("products/{id}")
-	@ApiOperation(value = "Delete a product", nickname = "delete")
+	@ApiOperation(value = "Delete a product", nickname = "deleteProduct")
 	@RolesAllowed({"admin"})
 	public ResponseEntity<HttpStatus> delete(@ApiParam(value = "The product id", required = true) @PathVariable Long id) {		
 		try {
@@ -122,7 +122,7 @@ public class ProductController {
 		}
 	}
 	
-	@ApiOperation(value = "Count number product", nickname = "count")
+	@ApiOperation(value = "Count number product", nickname = "countProduct")
 	@GetMapping("products/count")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<Long> count() {

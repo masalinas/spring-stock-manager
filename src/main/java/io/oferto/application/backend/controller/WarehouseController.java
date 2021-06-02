@@ -40,7 +40,7 @@ public class WarehouseController {
     }
 	
 	@GetMapping("warehouses")
-	@ApiOperation(value = "Get all warehouses", nickname = "findAll")
+	@ApiOperation(value = "Get all warehouses", nickname = "findAllWarehouse")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<List<Warehouse>> findAll() {
 		try {
@@ -53,7 +53,7 @@ public class WarehouseController {
 	}
 	
 	@GetMapping("warehouses/{id}")
-	@ApiOperation(value = "Get warehouse by Id", nickname = "findById")
+	@ApiOperation(value = "Get warehouse by Id", nickname = "findByIdWarehouse")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<Warehouse> findById(@ApiParam(value = "The warehouse id", required = true)  @PathVariable Long id) {
 		try {
@@ -66,7 +66,7 @@ public class WarehouseController {
 	}
 	
 	@PostMapping("warehouses")
-	@ApiOperation(value = "Create a warehouse", nickname = "save")
+	@ApiOperation(value = "Create a warehouse", nickname = "saveWarehouse")
 	@ResponseStatus(HttpStatus.CREATED)
 	@RolesAllowed({"admin"})
 	public ResponseEntity<Warehouse> save(@ApiParam(value="Warehouse entity") @RequestBody final Warehouse warehouse) {
@@ -79,7 +79,7 @@ public class WarehouseController {
 	}
 
 	@DeleteMapping("warehouses/{id}")
-	@ApiOperation(value = "Delete a warehouse", nickname = "delete")
+	@ApiOperation(value = "Delete a warehouse", nickname = "deleteWarehouse")
 	@RolesAllowed({"admin"})
 	public ResponseEntity<HttpStatus> delete(@ApiParam(value = "The warehouse id", required = true) @PathVariable Long id) {		
 		try {
@@ -91,7 +91,7 @@ public class WarehouseController {
 		}
 	}
 	
-	@ApiOperation(value = "Count number warehousea", nickname = "count")
+	@ApiOperation(value = "Count number warehousea", nickname = "countWarehouse")
 	@GetMapping("warehouses/count")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<Long> count() {

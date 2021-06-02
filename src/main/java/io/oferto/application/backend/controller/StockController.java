@@ -39,7 +39,7 @@ public class StockController {
 	StockService stockService;
 		
 	@GetMapping("stocks")
-	@ApiOperation(value = "Get all stocks", nickname = "findAll")
+	@ApiOperation(value = "Get all stocks", nickname = "findAllStock")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<List<Stock>> findAll() {
 		try {
@@ -52,7 +52,7 @@ public class StockController {
 	}
 	
 	@GetMapping("stocks/warehouses/{warehouseId}")
-	@ApiOperation(value = "Get all stocks by Warehouse Id", nickname = "findByWarehouseId")
+	@ApiOperation(value = "Get all stocks by Warehouse Id", nickname = "findByWarehouseIdStock")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<List<Stock>> findAllByWarehouseId(@ApiParam(value = "The warehouse id", required = true) @PathVariable Long warehouseId) {
 		try {
@@ -65,7 +65,7 @@ public class StockController {
 	}
 	
 	@GetMapping("stocks/{id}")
-	@ApiOperation(value = "Get stock by Id", nickname = "findById")
+	@ApiOperation(value = "Get stock by Id", nickname = "findByIdStock")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<Stock> findById(@ApiParam(value = "The stock id", required = true)  @PathVariable Long id) {
 		try {
@@ -78,7 +78,7 @@ public class StockController {
 	}
 	
 	@PostMapping("stocks")
-	@ApiOperation(value = "Create a stock", nickname = "save")
+	@ApiOperation(value = "Create a stock", nickname = "saveStock")
 	@ResponseStatus(HttpStatus.CREATED)
 	@RolesAllowed({"admin"})
 	public ResponseEntity<Stock> save(@ApiParam(value="Stock entity") @RequestBody final Stock stock) {
@@ -91,7 +91,7 @@ public class StockController {
 	}
 
 	@PostMapping("/stocks/products/{productId}")
-    @ApiOperation(value = "Create a stock", nickname = "create")
+    @ApiOperation(value = "Create a stock", nickname = "createStock")
 	@ResponseStatus(HttpStatus.CREATED)
 	@RolesAllowed({"admin"})
     public ResponseEntity<Stock> create(@PathVariable (value = "productId") Long productId, @RequestBody Stock stock) {
@@ -110,7 +110,7 @@ public class StockController {
     }
 	
 	@DeleteMapping("stocks/{id}")
-	@ApiOperation(value = "Delete a stock", nickname = "delete")
+	@ApiOperation(value = "Delete a stock", nickname = "deleteStock")
 	@RolesAllowed({"admin"})
 	public ResponseEntity<HttpStatus> delete(@ApiParam(value = "The stock id", required = true) @PathVariable Long id) {		
 		try {
@@ -122,7 +122,7 @@ public class StockController {
 		}
 	}
 	
-	@ApiOperation(value = "Count number stocks", nickname = "count")
+	@ApiOperation(value = "Count number stocks", nickname = "countStock")
 	@GetMapping("stocks/count")
 	@RolesAllowed({"user", "admin"})
 	public ResponseEntity<Long> count() {

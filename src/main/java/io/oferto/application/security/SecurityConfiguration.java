@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
@@ -29,11 +30,21 @@ class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     public KeycloakSpringBootConfigResolver KeycloakConfigResolver() {
         return new KeycloakSpringBootConfigResolver();
     }
-
+    
     @Bean
     @Override
     protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
         return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs",
+                                   "/configuration/ui",
+                                   "/swagger-resources/**",
+                                   "/configuration/security",
+                                   "/swagger-ui/**",
+                                   "/webjars/**");
     }
         
     @Override
@@ -44,6 +55,13 @@ class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         	.csrf().disable()
         	.authorizeRequests()
             .anyRequest()
-            .permitAll();      
+            .authenticated()
+            .and()
+            .logout()
+            	.logoutUrl("/sso/logout")
+            	.clearAuthentication(true)
+            	.invalidateHttpSession(true)
+            	.deleteCookies("JSESSIONID", "OAuth_Token_Request_State")
+            	.logoutSuccessUrl("http://localhost:8081/swagger-ui/index.html");
     }
 }
